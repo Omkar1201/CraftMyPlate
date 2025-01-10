@@ -3,7 +3,7 @@ const router=express.Router()
 
 const {auth}=require('../middleware/auth')
 const {register,login}=require('../controllers/Auth')
-const {getAllMenu,addMenuItem,updateMenuItem}=require('../controllers/Menu')
+const {getAllMenu,addMenuItem,updateMenuItem,deleteMenuItem}=require('../controllers/Menu')
 
 router.post('/register',register)
 router.post('/login',login)
@@ -11,6 +11,7 @@ router.post('/login',login)
 router.get('/menu',auth,getAllMenu)
 router.post('/menu',auth,addMenuItem)
 router.put('/menu/:id',auth,updateMenuItem)
+router.delete('/menu/:id',auth,deleteMenuItem)
 
 router.get('/',auth,(req,res)=>{
     res.status(200).json({

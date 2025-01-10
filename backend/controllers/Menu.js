@@ -63,4 +63,30 @@ const updateMenuItem=async(req,res)=>{
         })
     }
 }
-module.exports={getAllMenu,addMenuItem,updateMenuItem}
+
+const deleteMenuItem=async(req,res)=>{
+    try{
+        const itemId=req.params.id
+        const deletedMenuItem=await Menu.findByIdAndDelete(itemId)
+        if(!deletedMenuItem)
+        {
+            return res.status(404).json({
+                success:false,
+                message:"Menu Item not found"
+            })
+        }
+
+        return res.status(200).json({
+            success:true,
+            deletedMenuItem,
+            message:"Menu item deleted successfully!"
+        })
+    }
+    catch(err){
+        res.status(500).json({
+            success:false,
+            message:`Error deleting menu item - ${err.message}`
+        })
+    }
+}
+module.exports={getAllMenu,addMenuItem,updateMenuItem,deleteMenuItem}
