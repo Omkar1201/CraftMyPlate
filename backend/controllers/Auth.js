@@ -59,7 +59,7 @@ const login=async(req,res)=>{
         if(isPasswordMatch)
         {
             const payload={
-                user_id:userData._id,
+                userId:userData._id,
                 username:userData.username
             }
 

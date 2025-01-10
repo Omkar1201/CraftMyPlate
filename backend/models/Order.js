@@ -9,7 +9,7 @@ const Orderschema=new mongoose.Schema(
             required:true
         },
         items:[{
-            menuitemId:{
+            menuItemId:{
                 type:mongoose.Schema.Types.ObjectId,
                 ref:'Menu'
             },
