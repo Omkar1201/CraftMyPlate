@@ -36,4 +36,31 @@ const addMenuItem=async(req,res)=>{
     }
 }
 
-module.exports={getAllMenu,addMenuItem}
+const updateMenuItem=async(req,res)=>{
+    try{
+        const itemId=req.params.id
+        const {name,category,price,availability}=req.body
+        const updatedMenuItem=await Menu.findByIdAndUpdate(itemId,{name,category,price,availability},{new:true});
+
+        if(!updatedMenuItem)
+        {
+            return res.status(404).json({
+                success:false,
+                message:"Menu item not found"
+            })
+        }
+
+        return res.status(200).json({
+            success:true,
+            updatedMenuItem,
+            message:"Menu item updated successfully!"
+        })
+    }
+    catch(err){
+        res.status(400).json({
+            success:false,
+            message:`Error updating menu item - ${err.message}`
+        })
+    }
+}
+module.exports={getAllMenu,addMenuItem,updateMenuItem}
