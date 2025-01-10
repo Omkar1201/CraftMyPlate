@@ -8,6 +8,7 @@ const Menuschema=new mongoose.Schema(
         },
         category:{
             type:String,
+            enum: ['Appetizers', 'Main Course', 'Desserts'],
             required:true
         },
         price:{
