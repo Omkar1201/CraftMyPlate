@@ -1,11 +1,12 @@
+const { default: mongoose } = require('mongoose');
 const Menu=require('../models/Menu');
 
 const getAllMenu=async(req,res)=>{
     try{
-        const allMenuData=await Menu.find({});
+        const allMenuItems=await Menu.find({});
         res.status(200).json({
             success:true,
-            allMenuData,
+            allMenuItems,
             message:"Menu retrived successfully!"
         })
     }
@@ -35,3 +36,4 @@ const addMenuItem=async(req,res)=>{
     }
 }
 
+module.exports={getAllMenu,addMenuItem}

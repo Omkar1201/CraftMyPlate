@@ -3,9 +3,13 @@ const router=express.Router()
 
 const {auth}=require('../middleware/auth')
 const {register,login}=require('../controllers/Auth')
+const {getAllMenu,addMenuItem}=require('../controllers/Menu')
 
 router.post('/register',register)
 router.post('/login',login)
+
+router.get('/menu',auth,getAllMenu)
+router.post('/menu',auth,addMenuItem)
 
 router.get('/',auth,(req,res)=>{
     res.status(200).json({
