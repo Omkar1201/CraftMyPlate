@@ -5,10 +5,10 @@ const jwt=require('jsonwebtoken')
 const register=async(req,res)=>{
     try{
         const {username,password}=req.body;
-        const isUserPresent=User.findOne({username})
+        const isUserPresent=await User.findOne({username})
         if(isUserPresent)
         {
-            res.satus(409).json({
+            return res.status(409).json({
                 success:false,
                 message:"User is already present"
             })
@@ -17,24 +17,24 @@ const register=async(req,res)=>{
         // create hash        
         let hashdpassword;
         try{
-            hashdpassword=bcrypt.hash(password,10);
+            hashdpassword=await bcrypt.hash(password,10);
         }
         catch(err)
         {
-            res.status(500).json({
+            return res.status(500).json({
                 success:false,
                 message:`Unable to create hash of password - ${err.message}`
             })
         }
         
         await User.create({username,password:hashdpassword})
-        res.status(200).json({
+        return res.status(200).json({
             success:true,
-            message:"Registration successfull!"
+            message:"Registration successful!"
         })
     }
     catch(err){
-        res.status(500).json({
+        return res.status(500).json({
             success:false,
             message:err.message
         })
@@ -44,17 +44,18 @@ const register=async(req,res)=>{
 const login=async(req,res)=>{
     try{
         const {username,password}=req.body
-        const userData=User.find({username})
+        const userData=await User.findOne({username})
 
         if(!userData)
         {
-            res.status(404).json({
+            return res.status(404).json({
                 success:false,
                 message:"user not found"
             })
         }
-
+        
         const isPasswordMatch=await bcrypt.compare(password,userData.password)
+        console.log(userData);
         if(isPasswordMatch)
         {
             const payload={
@@ -64,10 +65,10 @@ const login=async(req,res)=>{
 
             const token=jwt.sign(payload,process.env.JWT_SECRET,{expiresIn:'5h'})
 
-            res.status(200).json({
+            return res.status(200).json({
                 success:true,
                 token,
-                message:`Login successfull (Hi ${userData.username}`
+                message:`Login successfull (Hi ${userData.username})`
             })
         }
         else{
@@ -78,9 +79,10 @@ const login=async(req,res)=>{
         }
     }
     catch(err){
-        res.satus(500).json({
+        return res.status(500).json({
             success:false,
             message:err.message
+            
         })
     }
 }
