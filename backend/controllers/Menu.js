@@ -1,4 +1,3 @@
-const { default: mongoose } = require('mongoose');
 const Menu=require('../models/Menu');
 
 const getAllMenu=async(req,res)=>{
@@ -21,6 +20,13 @@ const getAllMenu=async(req,res)=>{
 const addMenuItem=async(req,res)=>{
     try{
         const {name,category,price,availability}=req.body
+        if(!name || !category || price==null)
+        {
+            return res.status(400).json({
+                success: false,
+                message: "Name, category, and price are required.",
+            });
+        }
         const newMenuItem=await Menu.create({name,category,price,availability})
         return res.status(200).json({
             success:true,
