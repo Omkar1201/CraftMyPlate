@@ -1,10 +1,12 @@
 const express=require('express')
 const app=express();
+const cookieParser = require('cookie-parser');
 
 const connnectDB=require('./config/database')
 require('dotenv').config()
 
 app.use(express.json())
+app.use(cookieParser())
 
 const userRoutes=require('./routes/userRoutes')
 app.use('/api/v1/',userRoutes)

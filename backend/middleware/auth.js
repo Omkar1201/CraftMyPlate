@@ -2,7 +2,7 @@ require('dotenv').config()
 const jwt=require('jsonwebtoken')
 const auth=async(req,res,next)=>{
     try{
-        const token=req.header("Authorization").replace("Bearer ","");
+        const token=req.header("Authorization") ? req.header("Authorization").replace("Bearer ","") : req.cookies.authToken;
         
         if(!token || token === 'null')
         {

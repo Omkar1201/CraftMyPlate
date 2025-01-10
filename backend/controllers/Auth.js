@@ -55,7 +55,6 @@ const login=async(req,res)=>{
         }
         
         const isPasswordMatch=await bcrypt.compare(password,userData.password)
-        console.log(userData);
         if(isPasswordMatch)
         {
             const payload={
@@ -64,6 +63,13 @@ const login=async(req,res)=>{
             }
 
             const token=jwt.sign(payload,process.env.JWT_SECRET,{expiresIn:'5h'})
+
+            res.cookie('authToken', token, {
+                httpOnly: true,   
+                maxAge: 5 * 60 * 60 * 1000,  
+                sameSite: 'strict',   
+                secure:true
+            });
 
             return res.status(200).json({
                 success:true,
