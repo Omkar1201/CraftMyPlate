@@ -1,6 +1,5 @@
 const Order=require('../models/Order')
 const Menu=require('../models/Menu')
-const { findById } = require('../models/User')
 const placeOrder=async(req,res)=>{
     try{
         const userId=req.user.userId
