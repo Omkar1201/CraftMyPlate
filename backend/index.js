@@ -8,9 +8,9 @@ const connnectDB=require('./config/database')
 
 const corsOptions={
     origin:[`${process.env.BASE_URL}`],
-    methods:"GET,POST,PUT,DELETE",
+    methods:['GET', 'POST', 'PUT', 'DELETE'],
     credentials:true,
-    allowedHeaders: 'Content-Type,Authorization'
+    allowedHeaders: ['Content-Type', 'Authorization'],
 }
 
 app.use(express.json())

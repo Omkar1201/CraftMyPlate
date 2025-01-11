@@ -1,96 +1,93 @@
-const User=require('../models/User')
-const bcrypt=require('bcrypt')
-const jwt=require('jsonwebtoken')
+const User = require('../models/User')
+const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 
-const register=async(req,res)=>{
-    try{
-        const {username,password}=req.body;
-        const isUserPresent=await User.findOne({username})
-        if(isUserPresent)
-        {
+const register = async (req, res) => {
+    try {
+        const { username, password } = req.body;
+        const isUserPresent = await User.findOne({ username })
+        if (isUserPresent) {
             return res.status(409).json({
-                success:false,
-                message:"User is already present"
+                success: false,
+                message: "User is already present"
             })
         }
 
         // create hash        
         let hashdpassword;
-        try{
-            hashdpassword=await bcrypt.hash(password,10);
+        try {
+            hashdpassword = await bcrypt.hash(password, 10);
         }
-        catch(err)
-        {
+        catch (err) {
             return res.status(500).json({
-                success:false,
-                message:`Unable to create hash of password - ${err.message}`
+                success: false,
+                message: `Unable to create hash of password - ${err.message}`
             })
         }
-        
-        await User.create({username,password:hashdpassword})
+
+        await User.create({ username, password: hashdpassword })
         return res.status(200).json({
-            success:true,
-            message:"Registration successful!"
+            success: true,
+            message: "Registration successful!"
         })
     }
-    catch(err){
+    catch (err) {
         return res.status(500).json({
-            success:false,
-            message:err.message
+            success: false,
+            message: err.message
         })
     }
 }
 
-const login=async(req,res)=>{
-    try{
-        const {username,password}=req.body
-        const userData=await User.findOne({username})
+const login = async (req, res) => {
+    try {
+        const { username, password } = req.body
+        const userData = await User.findOne({ username })
 
-        if(!userData)
-        {
+        if (!userData) {
             return res.status(404).json({
-                success:false,
-                message:"user not found"
+                success: false,
+                message: "user not found"
             })
         }
-        
-        const isPasswordMatch=await bcrypt.compare(password,userData.password)
-        if(isPasswordMatch)
-        {
-            const payload={
-                userId:userData._id,
-                username:userData.username
+
+        const isPasswordMatch = await bcrypt.compare(password, userData.password)
+        if (isPasswordMatch) {
+            const payload = {
+                userId: userData._id,
+                username: userData.username
             }
 
-            const token=jwt.sign(payload,process.env.JWT_SECRET,{expiresIn:'5h'})
-
+            const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '5h' })
+            
             res.cookie('authToken', token, {
-                httpOnly: true,   
-                maxAge: 5 * 60 * 60 * 1000,  
-                sameSite: 'strict',   
-                secure:true
+                httpOnly: true,
+                maxAge: 5 * 60 * 60 * 1000,
+                sameSite: 'none', 
+                secure: process.env.NODE_ENV === 'production',
             });
 
             return res.status(200).json({
-                success:true,
+                success: true,
                 token,
-                message:`Login successfull (Hi ${userData.username})`
+                username,
+                message: `Login successfull (Hi ${userData.username})`
             })
         }
-        else{
-            res.status(401).json({
-                success:false,
-                message:"Password not match"
+        else {
+            return res.status(401).json({
+                success: false,
+                message: "Password not match"
             })
         }
     }
-    catch(err){
+    catch (err) {
         return res.status(500).json({
-            success:false,
-            message:err.message
-            
+            success: false,
+            message: err.message
+
         })
     }
 }
 
-module.exports={register,login}
+module.exports = { register, login }

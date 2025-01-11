@@ -9,7 +9,7 @@ const {placeOrder,getUserOrders}=require('../controllers/Order')
 router.post('/register',register)
 router.post('/login',login)
 
-router.get('/menu',auth,getAllMenu)
+router.get('/menu',getAllMenu)
 router.post('/menu',auth,addMenuItem)
 router.put('/menu/:id',auth,updateMenuItem)
 router.delete('/menu/:id',auth,deleteMenuItem)
