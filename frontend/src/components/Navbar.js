@@ -24,7 +24,6 @@ function Navbar() {
 	const profile = useRef(null)
 	const location = useLocation()
 	const navigate = useNavigate()
-	console.log(isLoggedIn);
 	
 	const handleclickmobile = (event) => {
 		event.preventDefault()
@@ -151,7 +150,7 @@ function Navbar() {
 								</div>
 								<div className={`text-[0.7rem]  ${location.pathname === '/profile/myblogs' ? 'font-semibold' : 'font-thin'}`}>
 									{
-										localStorage.getItem('username') ? localStorage.getItem('username').charAt(0).toUpperCase() + localStorage.getItem('username').slice(1) : "demo"
+										localStorage.getItem('name') ? localStorage.getItem('name').charAt(0).toUpperCase() + localStorage.getItem('name').slice(1) : "user"
 									}
 								</div>
 								<div className={` z-10 custom-profile-modal ${profileModal ? 'flex' : 'hidden'} absolute top-[7.15rem] right-0 flex-col gap-5 items-start`} >
