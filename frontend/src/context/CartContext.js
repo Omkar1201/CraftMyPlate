@@ -6,6 +6,7 @@ export const CartContext = createContext();
 const CartProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
   const [totalAmount, setTotalAmount] = useState(0);
+  const [isLoggedIn, setisLoggedin] = useState(false);
   useEffect(() => {
     const storedCart = JSON.parse(localStorage.getItem('cart')) || [];
     setCart(storedCart);
@@ -31,7 +32,12 @@ const CartProvider = ({ children }) => {
   };
 
   return (
-    <CartContext.Provider value={{ cart, addToCart, totalAmount, clearCart }}>
+    <CartContext.Provider value={
+      {
+        cart, addToCart, totalAmount, clearCart,
+        isLoggedIn,setisLoggedin
+      }
+    }>
       {children}
     </CartContext.Provider>
   );

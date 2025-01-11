@@ -1,11 +1,13 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'
 import { Link } from 'react-router-dom';
 import { FaRegUser } from "react-icons/fa6";
 import { toast } from "react-toastify"
 import axios from 'axios';
+import { CartContext } from '../context/CartContext';
 
 export default function Signin() {
+	const {setisLoggedin}=useContext(CartContext)
 	const [eye, seteye] = useState(true)
 	const [user, setuser] = useState({ username: "", password: "" })
 	const [btnloading, setbtnloading] = useState(false)
@@ -25,6 +27,7 @@ export default function Signin() {
 
 			if (response.data.success) {
 				toast.success(`${response.data.message}`);
+				setisLoggedin(true)
 				localStorage.setItem("authToken", response.data.token);
 				localStorage.setItem("name", response.data.username);
 			} else {

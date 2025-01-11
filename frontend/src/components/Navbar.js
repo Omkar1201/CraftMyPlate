@@ -12,18 +12,20 @@ import { FiShoppingCart } from "react-icons/fi";
 import logo from '../images/CraftmyplateLogo.png'
 import './Navbar.css'
 import Sidebar from './Sidebar';
+import { CartContext } from '../context/CartContext';
 
 function Navbar() {
 	const cur = new Date().toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
+	const { isLoggedIn } = useContext(CartContext);
 	const [profileModal, setprofileModal] = useState(false)
 	const [signoutModalIsOpen, setSignoutModalIsOpen] = useState(false);
 	const [deletAccount, setdeleteAccount] = useState(false)
 	const [category, setcategory] = useState("")
 	const profile = useRef(null)
-	const isloggedin = true
 	const location = useLocation()
 	const navigate = useNavigate()
-
+	console.log(isLoggedIn);
+	
 	const handleclickmobile = (event) => {
 		event.preventDefault()
 		navigate('/')
@@ -53,10 +55,6 @@ function Navbar() {
 				</div>
 				<div className=' social_icons absolute top-0 right-0 text-xs flex flex-col'>
 					<div>{cur}</div>
-					<div className='flex items-center gap-1'>
-						<img className='w-4' alt='flagimg'></img>
-						<div>IN</div>
-					</div>
 				</div>
 			</div>
 			{/* <div className='border my-4 hidden bottomline border-black'></div> */}
@@ -83,9 +81,9 @@ function Navbar() {
 					</button>
 				</Link> */}
 				{
-					!isloggedin &&
-					<Link to='/Signin'>
-						<button className={`${location.pathname === '/Signin' ? ' bg-black text-white' : ''} border px-4 py-1 border-black text-black font-semibold`}>
+					!isLoggedIn &&
+					<Link to='/login'>
+						<button className={`${location.pathname === '/login' ? ' bg-black text-white' : ''} border px-4 py-1 border-black text-black font-semibold`}>
 							Log in
 						</button>
 					</Link>
@@ -146,7 +144,7 @@ function Navbar() {
 					</button>
 
 					{
-						isloggedin ? (
+						isLoggedIn ? (
 							<div ref={profile} className=' flex flex-col items-center group cursor-pointer' onClick={() => setprofileModal(!profileModal)}>
 								<div className={`text-[2rem] w-fit group-hover:bg-gray-200  ${location.pathname === '/profile/myblogs' ? ' text-blue-500' : ''}`} title='Profile'>
 									<CgProfile />
@@ -188,7 +186,7 @@ function Navbar() {
 						) :
 							(
 
-								<Link to='/Signin'>
+								<Link to='/login'>
 									<button className=' hover:bg-black hover:text-white border px-4 py-1 bg-zinc-200 text-black font-semibold rounded-md'>
 										Log in
 									</button>
