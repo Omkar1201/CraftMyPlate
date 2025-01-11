@@ -42,7 +42,7 @@ export default function Signin() {
 		})
 	}
 	return (
-		<div className='flex items-center justify-center w-screen h-screen' >
+		<div className='flex items-center justify-center h-screen' >
 
 			<div className='border-2 flex flex-col items-center duration-[0.5s] transition-all shadow-2xl gap-5 py-[4.2rem] px-[3rem] rounded-lg'>
 				<h2 className='text-xl font-bold'>LOGIN</h2>
