@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react'
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FaRegUser } from "react-icons/fa6";
 import { toast } from "react-toastify"
 import axios from 'axios';
@@ -11,6 +11,7 @@ export default function Signin() {
 	const [eye, seteye] = useState(true)
 	const [user, setuser] = useState({ username: "", password: "" })
 	const [btnloading, setbtnloading] = useState(false)
+	const navigate=useNavigate()
 	async function handlesubmit(event) {
 		event.preventDefault();
 		setbtnloading(true);
@@ -30,6 +31,7 @@ export default function Signin() {
 				setisLoggedin(true)
 				localStorage.setItem("authToken", response.data.token);
 				localStorage.setItem("name", response.data.username);
+				navigate('/')
 			} else {
 				toast.warn(`${response.data.message}`);
 			}

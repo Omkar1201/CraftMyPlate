@@ -144,8 +144,8 @@ function Navbar() {
 
 					{
 						isLoggedIn ? (
-							<div ref={profile} className=' flex flex-col items-center group cursor-pointer' onClick={() => setprofileModal(!profileModal)}>
-								<div className={`text-[2rem] w-fit group-hover:bg-gray-200  ${location.pathname === '/profile/myblogs' ? ' text-blue-500' : ''}`} title='Profile'>
+							<div ref={profile} className=' flex flex-col items-center group cursor-pointer'>
+								<div className={`text-[2rem] w-fit group-hover:bg-gray-200`}>
 									<CgProfile />
 								</div>
 								<div className={`text-[0.7rem]  ${location.pathname === '/profile/myblogs' ? 'font-semibold' : 'font-thin'}`}>

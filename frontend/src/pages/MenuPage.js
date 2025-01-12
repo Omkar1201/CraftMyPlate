@@ -1,39 +1,150 @@
-// src/pages/MenuPage.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const MenuPage = () => {
-	const [menuItems, setMenuItems] = useState([]);
+    const [menuItems, setMenuItems] = useState([]);
+    const [formData, setFormData] = useState({ name: '', category: '', price: '' });
+    const [editingItemId, setEditingItemId] = useState(null);
+    const [isFormVisible, setIsFormVisible] = useState(false);
 
-	useEffect(() => {
-		const fetchMenuItems = async () => {
-			const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/menu`, {
-				headers: {
-					Authorization: `Bearer ${localStorage.getItem('authToken')}`,
-				},
-			});
-			setMenuItems(response.data.allMenuItems);
-		};
-		fetchMenuItems();
-	}, []);
+    const fetchMenuItems = async () => {
+        const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/menu`, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('authToken')}`,
+            },
+        });
+        setMenuItems(response.data.allMenuItems);
+    };
 
-	return (
-		<div className="container mx-auto p-6">
-			<h2 className="text-2xl font-semibold mb-6 text-center">Menu</h2>
-			<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-				{menuItems.map((item) => (
-					<div key={item._id} className="bg-white p-4 rounded-lg shadow-md">
-						<h3 className="text-xl font-semibold">{item.name}</h3>
-						<p className="text-gray-500">{item.category}</p>
-						<p className="text-gray-700 mt-2">${item.price}</p>
-						<button className="mt-4 w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600">
-							Add to Cart
-						</button>
-					</div>
-				))}
-			</div>
-		</div>
-	);
+    useEffect(() => {
+        fetchMenuItems();
+    }, []);
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (editingItemId) {
+            await axios.put(
+                `${process.env.REACT_APP_BASE_URL}/menu/${editingItemId}`,
+                formData,
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('authToken')}`,
+                    },
+                }
+            );
+        } else {
+            await axios.post(`${process.env.REACT_APP_BASE_URL}/menu`, formData, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('authToken')}`,
+                },
+            });
+        }
+        setEditingItemId(null);
+        setFormData({ name: '', category: '', price: '' });
+        fetchMenuItems();
+        setIsFormVisible(false);
+    };
+
+    const handleEdit = (item) => {
+        setEditingItemId(item._id);
+        setFormData({ name: item.name, category: item.category, price: item.price });
+        setIsFormVisible(true);
+    };
+
+    const handleDelete = async (id) => {
+        await axios.delete(`${process.env.REACT_APP_BASE_URL}/menu/${id}`, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('authToken')}`,
+            },
+        });
+        setMenuItems(menuItems.filter((item) => item._id !== id));
+    };
+
+    return (
+        <div className="container mx-auto p-6">
+            <h2 className="text-3xl font-semibold mb-6 text-center">Menu Management</h2>
+
+            <div 
+                className={`transition-all duration-500 ease-in-out ${isFormVisible ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0 overflow-hidden'} bg-gray-100 p-6 rounded-lg shadow-lg mb-6`}
+            >
+                {isFormVisible && (
+                    <form onSubmit={handleSubmit}>
+                        <h3 className="text-xl font-semibold mb-4">{editingItemId ? 'Edit Menu Item' : 'Add New Menu Item'}</h3>
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <input
+                                type="text"
+                                name="name"
+                                value={formData.name}
+                                onChange={handleInputChange}
+                                placeholder="Name"
+                                className="p-2 border rounded w-full"
+                                required
+                            />
+                            <select
+                                name="category"
+                                value={formData.category}
+                                onChange={handleInputChange}
+                                className="p-2 border rounded w-full"
+                                required
+                            >
+                                <option value="">Select Category</option>
+                                <option value="Appetizers">Appetizers</option>
+                                <option value="Main Course">Main Course</option>
+                                <option value="Desserts">Desserts</option>
+                            </select>
+                            <input
+                                type="number"
+                                name="price"
+                                value={formData.price}
+                                onChange={handleInputChange}
+                                placeholder="Price"
+                                className="p-2 border rounded w-full"
+                                required
+                            />
+                        </div>
+                        <button
+                            type="submit"
+                            className="mt-4 bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600">
+                            {editingItemId ? 'Update Item' : 'Add Item'}
+                        </button>
+                    </form>
+                )}
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                {menuItems.map((item) => (
+                    <div key={item._id} className="bg-white p-4 rounded-lg border shadow-md">
+                        <h3 className="text-xl font-semibold">{item.name}</h3>
+                        <p className="text-gray-500">Category: {item.category}</p>
+                        <p className="text-gray-700 mt-2">Price: &#8377;{item.price}</p>
+                        <div className="mt-4 flex justify-between">
+                            <button
+                                onClick={() => handleEdit(item)}
+                                className="bg-yellow-500 text-white py-1 px-3 rounded hover:bg-yellow-600">
+                                Edit
+                            </button>
+                            <button
+                                onClick={() => handleDelete(item._id)}
+                                className="bg-red-500 text-white py-1 px-3 rounded hover:bg-red-600">
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                ))}
+            </div>
+
+            <button
+                onClick={() => setIsFormVisible(!isFormVisible)}
+                className="fixed bottom-4 right-4 bg-blue-500 text-white text-3xl rounded-full w-12 h-12 pb-1 flex items-center justify-center hover:bg-blue-600 shadow-lg transition-transform transform duration-500 ease-in-out hover:scale-110" title='Add New Item'>
+                {isFormVisible ? '-' : '+'}
+            </button>
+        </div>
+    );
 };
 
 export default MenuPage;
