@@ -7,7 +7,7 @@ import axios from 'axios';
 import { CartContext } from '../context/CartContext';
 
 export default function Signin() {
-	const {setisLoggedin}=useContext(CartContext)
+	const {setisLoggedIn,fetchOrders}=useContext(CartContext)
 	const [eye, seteye] = useState(true)
 	const [user, setuser] = useState({ username: "", password: "" })
 	const [btnloading, setbtnloading] = useState(false)
@@ -28,9 +28,10 @@ export default function Signin() {
 
 			if (response.data.success) {
 				toast.success(`${response.data.message}`);
-				setisLoggedin(true)
+				setisLoggedIn(true)
 				localStorage.setItem("authToken", response.data.token);
 				localStorage.setItem("name", response.data.username);
+				fetchOrders()
 				navigate('/')
 			} else {
 				toast.warn(`${response.data.message}`);

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { CartContext } from '../context/CartContext';
+import { toast } from 'react-toastify';
 
 const MenuPage = () => {
 	const { cart, setCart, menuItems, setMenuItems } = useContext(CartContext);
@@ -79,6 +80,8 @@ const MenuPage = () => {
 		} else {
 			setCart([...cart, newCartItem]);
 		}
+
+		toast.success(`${item.name} added to cart`)
 	};
 	
 	return (
@@ -166,7 +169,7 @@ const MenuPage = () => {
 									const quantity = document.getElementById(`quantity-${item._id}`).value;
 									addToCart(item, quantity);
 								}}
-								className="bg-blue-500 text-white py-1 px-3 rounded hover:bg-blue-600" disabled={!item.availability}>
+								className="bg-blue-500 active:bg-blue-500 text-white py-1 px-3 rounded hover:bg-blue-600" disabled={!item.availability}>
 								Add to Cart
 							</button>
 						</div>

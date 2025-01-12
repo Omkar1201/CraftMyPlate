@@ -2,11 +2,11 @@ import React, { useContext } from 'react';
 import { CartContext } from '../context/CartContext';
 import { MdOutlineDelete } from "react-icons/md";
 import { FaPlus, FaMinus } from "react-icons/fa6";
-import axios from 'axios'; // For making HTTP requests
+import axios from 'axios'; 
 import { toast } from 'react-toastify';
 
 const CartComponent = () => {
-	const { cart, menuItems, setCart } = useContext(CartContext);
+	const { cart, menuItems, setCart,fetchOrders } = useContext(CartContext);
 
 	const handleRemove = (menuItemId) => {
 		const updatedCart = cart.filter(item => item.menuItemId !== menuItemId);
@@ -33,7 +33,6 @@ const CartComponent = () => {
 		setCart(updatedCart);
 	};
 
-	// Calculate Total Amount
 	const totalAmount = cart.reduce((acc, item) => {
 		const menuItem = menuItems.find(menu => menu._id === item.menuItemId);
 		return menuItem ? acc + menuItem.price * item.quantity : acc;
@@ -44,6 +43,11 @@ const CartComponent = () => {
 			alert("Your cart is empty. Add items before placing an order.");
 			return;
 		}
+		const token = localStorage.getItem('authToken');
+		if (!token) {
+			toast.error("No token found. Please log in.");
+			return; 
+		}
 		try {
 			const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/order`, {items:cart},
 				{headers:{Authorization: `Bearer ${localStorage.getItem('authToken')}`}}
@@ -51,6 +55,7 @@ const CartComponent = () => {
 			
 			if (response.data.success) {
 				toast.success("Order placed successfully!");
+				fetchOrders()
 				setCart([]);
 			} else {
 				toast.warn(`${response.data.message}`);
@@ -80,7 +85,7 @@ const CartComponent = () => {
 											</div>
 											<button
 												onClick={() => handleRemove(item.menuItemId)}
-												className="text-[1.4rem] h-fit text-black rounded-full hover:bg-red-500 active:bg-red-600"
+												className="text-[1.4rem] h-fit text-red-700 bg-red-100 rounded-full hover:bg-red-200 active:bg-red-100"
 											>
 												<div className='m-2'>
 													<MdOutlineDelete />
