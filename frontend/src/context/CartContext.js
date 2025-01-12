@@ -7,6 +7,8 @@ const CartProvider = ({ children }) => {
 	const [cart, setCart] = useState([]);
 	const [totalAmount, setTotalAmount] = useState(0);
 	const [isLoggedIn, setisLoggedin] = useState(false);
+	const [menuItems, setMenuItems] = useState([]);
+	
 	useEffect(() => {
 		const authenticate = async () => {
 			const token = localStorage.getItem('authToken')
@@ -52,7 +54,7 @@ const CartProvider = ({ children }) => {
 	return (
 		<CartContext.Provider value={
 			{
-				isLoggedIn, setisLoggedin,cart,setCart
+				isLoggedIn, setisLoggedin,cart,setCart,menuItems, setMenuItems
 			}
 		}>
 			{children}

@@ -7,6 +7,7 @@ import OrderPage from './pages/OrderPage';
 import RegisterPage from './pages/RegisterPage';
 import Navbar from './components/Navbar';
 import './App.css'
+import CartComponent from './components/CartComponent';
 
 const App = () => {
   return (
@@ -17,6 +18,7 @@ const App = () => {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/order" element={<OrderPage />} />
+        <Route path="/cart" element={<CartComponent />} />
 
         {/* Add other routes here */}
       </Routes>

@@ -3,8 +3,7 @@ import axios from 'axios';
 import { CartContext } from '../context/CartContext';
 
 const MenuPage = () => {
-    const { cart, setCart } = useContext(CartContext);
-    const [menuItems, setMenuItems] = useState([]);
+    const { cart, setCart ,menuItems, setMenuItems} = useContext(CartContext);
     const [formData, setFormData] = useState({ name: '', category: '', price: '' });
     const [editingItemId, setEditingItemId] = useState(null);
     const [isFormVisible, setIsFormVisible] = useState(false);
@@ -81,11 +80,10 @@ const MenuPage = () => {
         }
     };
 
-    console.log(cart);
 
     return (
         <div className="container mx-auto p-6">
-            <h2 className="text-3xl font-semibold mb-6 text-center">Menu Management</h2>
+            <h2 className="text-3xl font-semibold text-center">Menu Management</h2>
 
             <div
                 className={`transition-all duration-500 ease-in-out ${isFormVisible ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0 overflow-hidden'} bg-gray-100 p-6 rounded-lg shadow-lg mb-6`}
@@ -145,7 +143,7 @@ const MenuPage = () => {
                             <div>
                                 <input
                                     type="number"
-                                    className="border border-black outline-none pl-1 w-[3rem]"
+                                    className="border rounded-sm outline-none pl-1 w-[3rem]"
                                     defaultValue={1}
                                     min="1"
                                     id={`quantity-${item._id}`}

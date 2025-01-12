@@ -16,7 +16,7 @@ import { CartContext } from '../context/CartContext';
 
 function Navbar() {
 	const cur = new Date().toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
-	const { isLoggedIn,cart } = useContext(CartContext);
+	const { isLoggedIn, cart } = useContext(CartContext);
 	const [profileModal, setprofileModal] = useState(false)
 	const [signoutModalIsOpen, setSignoutModalIsOpen] = useState(false);
 	const [deletAccount, setdeleteAccount] = useState(false)
@@ -24,7 +24,7 @@ function Navbar() {
 	const profile = useRef(null)
 	const location = useLocation()
 	const navigate = useNavigate()
-	
+
 	const handleclickmobile = (event) => {
 		event.preventDefault()
 		navigate('/')
@@ -135,12 +135,14 @@ function Navbar() {
 							</button>
 						</div>
 					</form>
-					<button className=' px-4 py-1 rounded-md relative' >
-						<div className='text-[2rem] font-semibold'>
-							<FiShoppingCart />
-						</div>
-						<div className='border absolute top-[-0.3rem] right-[0.5rem] animate-bounce w-[1.2rem] text-[0.7rem] rounded-full border-black'>{cart.length}</div>
-					</button>
+					<Link to='/cart'>
+						<button className=' px-4 py-1 rounded-md relative' >
+							<div className='text-[2rem] font-semibold'>
+								<FiShoppingCart />
+							</div>
+							<div className='border absolute top-[-0.3rem] right-[0.5rem] animate-bounce w-[1.2rem] text-[0.7rem] rounded-full border-black'>{cart.length}</div>
+						</button>
+					</Link>
 
 					{
 						isLoggedIn ? (
