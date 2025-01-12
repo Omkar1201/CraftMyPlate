@@ -1,27 +1,27 @@
 // src/context/CartContext.js
 import React, { createContext, useState, useEffect } from 'react';
 import axios from 'axios'
+import { toast } from 'react-toastify';
 export const CartContext = createContext();
 
 const CartProvider = ({ children }) => {
 	const [cart, setCart] = useState([]);
 	const [isLoggedIn, setisLoggedin] = useState(false);
 	const [menuItems, setMenuItems] = useState([]);
-	
+	const [orders, setOrders] =useState([])
 	useEffect(() => {
 		const authenticate = async () => {
 			const token = localStorage.getItem('authToken')
 			try {
-				const response=await axios.get(
+				const response = await axios.get(
 					`${process.env.REACT_APP_BASE_URL}/`,
 					{
 						headers: {
 							Authorization: `Bearer ${token}`,
 						},
 					}
-				);				
-				if(response.data.success)
-				{
+				);
+				if (response.data.success) {
 					setisLoggedin(true);
 				}
 			}
@@ -29,31 +29,29 @@ const CartProvider = ({ children }) => {
 				console.log("Error occured while login");
 			}
 		}
-		authenticate()
+
+		const fetchOrders = async () => {
+			try {
+				const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/order`,
+					{ headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` } }
+				);
+				if (response.data.success) {
+					setOrders(response.data.userOrders);
+				} else {
+					toast.warn(response.data.message)
+				}
+			} catch (error) {
+				toast.error("Error fetching orders:", error.message);
+			}
+		};
+		authenticate();
+		fetchOrders();
 	}, [])
-
-	// const addToCart = (item, quantity) => {
-	// 	const newCart = [...cart, { ...item, quantity }];
-	// 	setCart(newCart);
-	// 	localStorage.setItem('cart', JSON.stringify(newCart));
-	// 	calculateTotalAmount(newCart);
-	// };
-
-	// const clearCart = () => {
-	// 	setCart([]);
-	// 	localStorage.setItem('cart', JSON.stringify([]));
-	// 	setTotalAmount(0);
-	// };
-
-	// const calculateTotalAmount = (cart) => {
-	// 	const amount = cart.reduce((total, item) => total + item.price * item.quantity, 0);
-	// 	setTotalAmount(amount);
-	// };
 
 	return (
 		<CartContext.Provider value={
 			{
-				isLoggedIn, setisLoggedin,cart,setCart,menuItems, setMenuItems
+				isLoggedIn, setisLoggedin, cart, setCart, menuItems, setMenuItems,orders, setOrders
 			}
 		}>
 			{children}
