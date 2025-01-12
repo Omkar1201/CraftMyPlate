@@ -5,7 +5,6 @@ export const CartContext = createContext();
 
 const CartProvider = ({ children }) => {
 	const [cart, setCart] = useState([]);
-	const [totalAmount, setTotalAmount] = useState(0);
 	const [isLoggedIn, setisLoggedin] = useState(false);
 	const [menuItems, setMenuItems] = useState([]);
 	

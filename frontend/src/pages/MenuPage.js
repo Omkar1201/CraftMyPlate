@@ -19,6 +19,7 @@ const MenuPage = () => {
 
     useEffect(() => {
         fetchMenuItems();
+		// eslint-disable-next-line
     }, []);
 
     const handleInputChange = (e) => {
