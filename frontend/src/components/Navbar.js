@@ -1,4 +1,4 @@
-import React, { useContext, useState, useRef, useEffect } from 'react'
+import React, { useContext, useState, useRef } from 'react'
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { CgProfile } from "react-icons/cg";
 import { BsSearch } from "react-icons/bs"
@@ -16,7 +16,7 @@ import { CartContext } from '../context/CartContext';
 
 function Navbar() {
 	const cur = new Date().toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
-	const { isLoggedIn } = useContext(CartContext);
+	const { isLoggedIn,cart } = useContext(CartContext);
 	const [profileModal, setprofileModal] = useState(false)
 	const [signoutModalIsOpen, setSignoutModalIsOpen] = useState(false);
 	const [deletAccount, setdeleteAccount] = useState(false)
@@ -139,7 +139,7 @@ function Navbar() {
 						<div className='text-[2rem] font-semibold'>
 							<FiShoppingCart />
 						</div>
-						<div className='border absolute top-[-0.3rem] right-[0.5rem] animate-bounce w-[1.2rem] text-[0.7rem] rounded-full border-black'>5</div>
+						<div className='border absolute top-[-0.3rem] right-[0.5rem] animate-bounce w-[1.2rem] text-[0.7rem] rounded-full border-black'>{cart.length}</div>
 					</button>
 
 					{

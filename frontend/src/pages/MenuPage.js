@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
+import { CartContext } from '../context/CartContext';
 
 const MenuPage = () => {
+    const { cart, setCart } = useContext(CartContext);
     const [menuItems, setMenuItems] = useState([]);
     const [formData, setFormData] = useState({ name: '', category: '', price: '' });
     const [editingItemId, setEditingItemId] = useState(null);
@@ -65,11 +67,27 @@ const MenuPage = () => {
         setMenuItems(menuItems.filter((item) => item._id !== id));
     };
 
+    const addToCart = (item, quantity) => {
+        const newCartItem = { menuItemId: item._id, quantity: parseInt(quantity) };
+
+        const existingItemIndex = cart.findIndex(cartItem => cartItem.menuItemId === item._id);
+
+        if (existingItemIndex !== -1) {
+            const updatedCart = [...cart];
+            updatedCart[existingItemIndex].quantity += newCartItem.quantity;
+            setCart(updatedCart);
+        } else {
+            setCart([...cart, newCartItem]);
+        }
+    };
+
+    console.log(cart);
+
     return (
         <div className="container mx-auto p-6">
             <h2 className="text-3xl font-semibold mb-6 text-center">Menu Management</h2>
 
-            <div 
+            <div
                 className={`transition-all duration-500 ease-in-out ${isFormVisible ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0 overflow-hidden'} bg-gray-100 p-6 rounded-lg shadow-lg mb-6`}
             >
                 {isFormVisible && (
@@ -122,6 +140,33 @@ const MenuPage = () => {
                         <h3 className="text-xl font-semibold">{item.name}</h3>
                         <p className="text-gray-500">Category: {item.category}</p>
                         <p className="text-gray-700 mt-2">Price: &#8377;{item.price}</p>
+                        <div className='mt-4 text-gray-700 '>Quantity: </div>
+                        <div className=" flex justify-between">
+                            <div>
+                                <input
+                                    type="number"
+                                    className="border border-black outline-none pl-1 w-[3rem]"
+                                    defaultValue={1}
+                                    min="1"
+                                    id={`quantity-${item._id}`}
+									onChange={(e)=>{
+										if(e.target.value<1)
+										{
+											e.target.value=1
+										}
+									}}
+                                />
+                            </div>
+                            <button
+                                onClick={() => {
+                                    const quantity = document.getElementById(`quantity-${item._id}`).value;
+                                    addToCart(item, quantity);
+                                }}
+                                className="bg-blue-500 text-white py-1 px-3 rounded hover:bg-blue-600">
+                                Add to Cart
+                            </button>
+                        </div>
+
                         <div className="mt-4 flex justify-between">
                             <button
                                 onClick={() => handleEdit(item)}
