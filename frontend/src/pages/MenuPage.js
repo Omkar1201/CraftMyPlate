@@ -104,7 +104,7 @@ const MenuPage = () => {
 	return (
 		<div className="container mx-auto p-6">
 			<h2 className="text-3xl font-semibold text-center">Menu Management</h2>
-			<div className='flex justify-end'>
+			<div className='flex justify-end mt-4'>
 				<select id="dropdown" value={selectedOption} onChange={handleChange} className='outline-none border px-1 py-[0.4rem] border-gray-200 bg-gray-100 rounded-md'>
 					<option value="">Sort by</option>
 					<option value="Low to High">Price: Low to High</option>
@@ -112,7 +112,7 @@ const MenuPage = () => {
 				</select>
 			</div>
 			<div
-				className={`transition-all duration-500 ease-in-out ${isFormVisible ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0 overflow-hidden'} bg-gray-100 p-6 rounded-lg shadow-lg mb-6`}
+				className={`transition-all duration-500 ease-in-out ${isFormVisible ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0 overflow-hidden'} bg-gray-100 rounded-lg shadow-lg mb-6`}
 			>
 				{isFormVisible && (
 					<form onSubmit={handleSubmit}>

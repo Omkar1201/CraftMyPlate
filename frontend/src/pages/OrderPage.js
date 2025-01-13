@@ -1,17 +1,34 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { CartContext } from '../context/CartContext';
 
 const OrderHistory = () => {
 	const { orders } = useContext(CartContext);
+	const [selectedStatus, setSelectedStatus] = useState('All');
+	const filteredOrders = selectedStatus === 'All'
+		? orders
+		: orders.filter(order => order.status === selectedStatus);
+
 	return (
 		<div className="min-h-screen bg-gray-100 py-8">
 			<div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-6">
 				<h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">Order History</h2>
-				{orders.length === 0 ? (
+				<div className="mb-4 justify-end flex">
+					<select
+						className="outline-none border px-4 py-[0.4rem] border-gray-200 bg-gray-100 rounded-md"
+						value={selectedStatus}
+						onChange={(e) => setSelectedStatus(e.target.value)}
+					>
+						<option value="All">All Orders</option>
+						<option value="Pending">Pending</option>
+						<option value="Completed">Completed</option>
+					</select>
+				</div>
+
+				{filteredOrders.length === 0 ? (
 					<p className="text-center text-gray-600">No orders found!</p>
 				) : (
 					<div className="space-y-6">
-						{orders.map(order => (
+						{filteredOrders.map(order => (
 							<div
 								key={order._id}
 								className="bg-gray-50 border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow duration-200"
@@ -20,8 +37,10 @@ const OrderHistory = () => {
 									<h4 className="text-lg font-semibold text-gray-700">Order ID: {order._id}</h4>
 									<span
 										className={`px-3 py-1 rounded-full text-sm font-medium ${order.status === "Pending"
-												? "bg-yellow-100 text-yellow-700"
-												: "bg-green-100 text-green-700"
+											? "bg-yellow-100 text-yellow-700"
+											: order.status === "Completed"
+											? "bg-green-100 text-green-700"
+											: "bg-red-100 text-red-700"
 											}`}
 									>
 										{order.status}
