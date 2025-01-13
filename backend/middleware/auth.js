@@ -8,7 +8,7 @@ const auth=async(req,res,next)=>{
         {
             return res.status(400).json({
                 success:false,
-                message:"Token not found"
+                message:"Token not found, Please Login"
             })
         }
 
@@ -20,7 +20,7 @@ const auth=async(req,res,next)=>{
         catch(err){
             return res.status(401).json({
                 success: false,
-                message: 'Token Invalid'
+                message: 'Token Invalid, Please Login again'
             })
         }
     }
