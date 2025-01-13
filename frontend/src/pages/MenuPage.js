@@ -4,7 +4,7 @@ import { CartContext } from '../context/CartContext';
 import { toast } from 'react-toastify';
 
 const MenuPage = () => {
-	const { cart, setCart, menuItems, setMenuItems, fetchMenuItems,tempmenuItems, setTempMenuItems } = useContext(CartContext);
+	const { cart, setCart, menuItems, setMenuItems, fetchMenuItems, tempmenuItems, setTempMenuItems } = useContext(CartContext);
 	const [formData, setFormData] = useState({ name: '', category: '', price: '' });
 	const [editingItemId, setEditingItemId] = useState(null);
 	const [isFormVisible, setIsFormVisible] = useState(false);
@@ -160,58 +160,60 @@ const MenuPage = () => {
 			</div>
 
 			<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-				{tempmenuItems.map((item) => (
-					<div key={item._id} className="bg-white p-4 rounded-lg border shadow-md">
-						<div className='flex justify-between'>
-							<div>
-								<h3 className="text-xl font-semibold">{item.name}</h3>
-								<p className="text-gray-500">Category: {item.category}</p>
-								<p className="text-gray-700 mt-2">Price: &#8377;{item.price}</p>
+				{
+					tempmenuItems&&
+					tempmenuItems.map((item) => (
+						<div key={item._id} className="bg-white p-4 rounded-lg border shadow-md">
+							<div className='flex justify-between'>
+								<div>
+									<h3 className="text-xl font-semibold">{item.name}</h3>
+									<p className="text-gray-500">Category: {item.category}</p>
+									<p className="text-gray-700 mt-2">Price: &#8377;{item.price}</p>
+								</div>
+								<div>
+									{item.availability ? <span className=' text-green-700 font-semibold bg-green-100 rounded-2xl py-[0.2rem] px-2'>Available</span> : <span className=' text-red-700 font-semibold bg-red-100 rounded-2xl py-[0.2rem] px-2'>Unavailable</span>}
+								</div>
 							</div>
-							<div>
-								{item.availability ? <span className=' text-green-700 font-semibold bg-green-100 rounded-2xl py-[0.2rem] px-2'>Available</span> : <span className=' text-red-700 font-semibold bg-red-100 rounded-2xl py-[0.2rem] px-2'>Unavailable</span>}
-							</div>
-						</div>
-						<div className='mt-4 text-gray-700 '>Quantity: </div>
-						<div className=" flex justify-between">
-							<div>
-								<input
-									type="number"
-									className="border rounded-sm outline-none pl-1 w-[3rem]"
-									defaultValue={1}
-									min="1"
-									id={`quantity-${item._id}`}
-									onChange={(e) => {
-										if (e.target.value < 1) {
-											e.target.value = 1
-										}
+							<div className='mt-4 text-gray-700 '>Quantity: </div>
+							<div className=" flex justify-between">
+								<div>
+									<input
+										type="number"
+										className="border rounded-sm outline-none pl-1 w-[3rem]"
+										defaultValue={1}
+										min="1"
+										id={`quantity-${item._id}`}
+										onChange={(e) => {
+											if (e.target.value < 1) {
+												e.target.value = 1
+											}
+										}}
+									/>
+								</div>
+								<button
+									onClick={() => {
+										const quantity = document.getElementById(`quantity-${item._id}`).value;
+										addToCart(item, quantity);
 									}}
-								/>
+									className="bg-blue-500 active:bg-blue-500 text-white py-1 px-3 rounded hover:bg-blue-600" disabled={!item.availability}>
+									Add to Cart
+								</button>
 							</div>
-							<button
-								onClick={() => {
-									const quantity = document.getElementById(`quantity-${item._id}`).value;
-									addToCart(item, quantity);
-								}}
-								className="bg-blue-500 active:bg-blue-500 text-white py-1 px-3 rounded hover:bg-blue-600" disabled={!item.availability}>
-								Add to Cart
-							</button>
-						</div>
 
-						<div className="mt-4 flex justify-between">
-							<button
-								onClick={() => handleEdit(item)}
-								className="bg-yellow-500 text-white py-1 px-3 rounded hover:bg-yellow-600">
-								Edit
-							</button>
-							<button
-								onClick={() => handleDelete(item._id)}
-								className="bg-red-500 text-white py-1 px-3 rounded hover:bg-red-600">
-								Delete
-							</button>
+							<div className="mt-4 flex justify-between">
+								<button
+									onClick={() => handleEdit(item)}
+									className="bg-yellow-500 text-white py-1 px-3 rounded hover:bg-yellow-600">
+									Edit
+								</button>
+								<button
+									onClick={() => handleDelete(item._id)}
+									className="bg-red-500 text-white py-1 px-3 rounded hover:bg-red-600">
+									Delete
+								</button>
+							</div>
 						</div>
-					</div>
-				))}
+					))}
 			</div>
 
 			<button

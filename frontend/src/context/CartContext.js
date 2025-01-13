@@ -24,7 +24,7 @@ const CartProvider = ({ children }) => {
 			setTempMenuItems(response.data.allMenuItems);
 		}
 		catch (err) {
-			toast.error(err.response.data.message)
+			toast.error(err.response?.data?.message)
 		}
 	};
 
@@ -37,7 +37,7 @@ const CartProvider = ({ children }) => {
 			setOrders(response.data.userOrders.reverse());
 		}
 		catch (err) {
-			toast.error(err.response.data.message);
+			toast.error(err.response?.data?.message);
 		}
 	};
 
@@ -51,7 +51,7 @@ const CartProvider = ({ children }) => {
 			fetchOrders();
 		}
 		catch (err) {
-			toast.warn(err.response.data.message);
+			toast.warn(err.response?.data?.message);
 			logout()
 		}
 	};
