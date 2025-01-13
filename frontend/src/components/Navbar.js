@@ -56,7 +56,6 @@ function Navbar() {
 					<div>{cur}</div>
 				</div>
 			</div>
-			{/* <div className='border my-4 hidden bottomline border-black'></div> */}
 			<div className=' mobile-navbar flex-wrap hidden justify-around my-4 font-semibold'>
 
 				<Link to='/'>
@@ -69,16 +68,6 @@ function Navbar() {
 						My Orders
 					</button>
 				</Link>
-				{/* <Link to='/About'>
-					<button className={`${location.pathname === '/About' ? 'bg-black text-white' : 'bg-zinc-100 text-black'} px-3  py-1 w-full`}>
-						About
-					</button>
-				</Link>
-				<Link to='/Contact'>
-					<button className={`${location.pathname === '/Contact' ? 'bg-black text-white' : 'bg-zinc-100 text-black'} px-3  py-1 w-full`}>
-						Contact
-					</button>
-				</Link> */}
 				{
 					!isLoggedIn &&
 					<Link to='/login'>
@@ -112,18 +101,6 @@ function Navbar() {
 								<div className={`${location.pathname === '/order' ? 'border-black' : 'border-transparent group-hover:border-gray-300 '}  border-2 absolute w-full`}></div>
 							</button>
 						</Link>
-						{/* <Link to='/About'>
-							<button className='group relative'>
-								About
-								<div className={`${location.pathname === '/About' ? 'border-black' : 'border-transparent group-hover:border-gray-300 '}  border-2 absolute w-full`}></div>
-							</button>
-						</Link>
-						<Link to='/Contact'>
-							<button className='group relative'>
-								Contact
-								<div className={`${location.pathname === '/Contact' ? 'border-black' : 'border-transparent group-hover:border-gray-300 '}  border-2 absolute w-full`}></div>
-							</button>
-						</Link> */}
 					</ul>
 				</div>
 				<div className='flex justify-center flex-wrap last-container items-center gap-10'>
