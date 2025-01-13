@@ -7,7 +7,7 @@ require('dotenv').config()
 const connnectDB=require('./config/database')
 
 const corsOptions={
-    origin:'*',
+    origin:[`${process.env.BASE_URL}`],
     methods:['GET', 'POST', 'PUT', 'DELETE'],
     credentials:true,
     allowedHeaders: ['Content-Type', 'Authorization'],
