@@ -113,7 +113,7 @@ const MenuPage = () => {
 				</select>
 			</div>
 			<div
-				className={`transition-all duration-500 ease-in-out ${isFormVisible ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0 overflow-hidden'} bg-gray-100 rounded-lg shadow-lg mb-6`}
+				className={`transition-all duration-500 my-4 ease-in-out ${isFormVisible ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0 overflow-hidden'} bg-gray-100 rounded-lg shadow-lg mb-6`}
 			>
 				{isFormVisible && (
 					<form onSubmit={handleSubmit}>

@@ -52,9 +52,15 @@ const CartProvider = ({ children }) => {
 		}
 		catch (err) {
 			toast.warn(err.response.data.message);
+			logout()
 		}
 	};
 
+	const logout=()=>{
+		localStorage.removeItem('name')
+		localStorage.removeItem('authToken')
+		setisLoggedIn(false);
+	}
 	useEffect(() => {
 		authenticate();
 		fetchMenuItems()
