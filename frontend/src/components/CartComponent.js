@@ -6,7 +6,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 
 const CartComponent = () => {
-	const { cart, menuItems, setCart, fetchOrders } = useContext(CartContext);
+	const { cart, menuItems, setCart, fetchOrders, setIsLoading } = useContext(CartContext);
 
 	const handleRemove = (menuItemId) => {
 		const updatedCart = cart.filter(item => item.menuItemId !== menuItemId);
@@ -43,6 +43,7 @@ const CartComponent = () => {
 			alert("Your cart is empty. Add items before placing an order.");
 			return;
 		}
+		setIsLoading(true)
 		const token = localStorage.getItem('authToken');
 		try {
 			await axios.post(`${process.env.REACT_APP_BASE_URL}/order`,
@@ -59,78 +60,81 @@ const CartComponent = () => {
 		catch (err) {
 			toast.error(err.response.data.message)
 		}
+		setIsLoading(false)
 	};
 
 	return (
 		<div className="cart-component m-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-			{cart.length > 0 ? (
-				<>
-					{cart.map((item, index) => {
-						const menuItem = menuItems.find(menu => menu._id === item.menuItemId);
 
-						return (
-							<div key={index} className="cart-item bg-white p-4 rounded-lg border shadow-md">
-								{menuItem ? (
-									<>
-										<div className='flex justify-between'>
-											<div>
-												<h4 className="text-xl font-semibold">{menuItem.name}</h4>
-												<p className="text-gray-700 mt-2">Price: &#8377;{menuItem.price}</p>
-												<p className="text-gray-500">Category: {menuItem.category}</p>
-											</div>
-											<button
-												onClick={() => handleRemove(item.menuItemId)}
-												className="text-[1.4rem] h-fit text-red-700 bg-red-100 rounded-full hover:bg-red-200 active:bg-red-100"
-											>
-												<div className='m-2'>
-													<MdOutlineDelete />
+			{
+				cart.length > 0 ? (
+					<>
+						{cart.map((item, index) => {
+							const menuItem = menuItems.find(menu => menu._id === item.menuItemId);
+
+							return (
+								<div key={index} className="cart-item bg-white p-4 rounded-lg border shadow-md">
+									{menuItem ? (
+										<>
+											<div className='flex justify-between'>
+												<div>
+													<h4 className="text-xl font-semibold">{menuItem.name}</h4>
+													<p className="text-gray-700 mt-2">Price: &#8377;{menuItem.price}</p>
+													<p className="text-gray-500">Category: {menuItem.category}</p>
 												</div>
-											</button>
-										</div>
-										<div className="mt-4 text-gray-700">
-											<span>Quantity:</span>
-											<div className="flex items-center border gap-5 rounded-xl w-fit mt-2">
 												<button
-													onClick={() => handleDecreaseQuantity(item.menuItemId)}
-													className="hover:bg-gray-200 active:bg-gray-300 py-2 px-2 rounded-l-xl">
-													<FaMinus />
-												</button>
-												<span className="">{item.quantity}</span>
-												<button
-													onClick={() => handleIncreaseQuantity(item.menuItemId)}
-													className="hover:bg-gray-200 active:bg-gray-300 py-2 px-2 rounded-r-xl">
-													<FaPlus />
+													onClick={() => handleRemove(item.menuItemId)}
+													className="text-[1.4rem] h-fit text-red-700 bg-red-100 rounded-full hover:bg-red-200 active:bg-red-100"
+												>
+													<div className='m-2'>
+														<MdOutlineDelete />
+													</div>
 												</button>
 											</div>
-											<div className='text-end'>
-												Amount: &#8377; {menuItem.price * item.quantity}
+											<div className="mt-4 text-gray-700">
+												<span>Quantity:</span>
+												<div className="flex items-center border gap-5 rounded-xl w-fit mt-2">
+													<button
+														onClick={() => handleDecreaseQuantity(item.menuItemId)}
+														className="hover:bg-gray-200 active:bg-gray-300 py-2 px-2 rounded-l-xl">
+														<FaMinus />
+													</button>
+													<span className="">{item.quantity}</span>
+													<button
+														onClick={() => handleIncreaseQuantity(item.menuItemId)}
+														className="hover:bg-gray-200 active:bg-gray-300 py-2 px-2 rounded-r-xl">
+														<FaPlus />
+													</button>
+												</div>
+												<div className='text-end'>
+													Amount: &#8377; {menuItem.price * item.quantity}
+												</div>
 											</div>
-										</div>
-									</>
-								) : (
-									<p>Menu item not found</p>
-								)}
-							</div>
-						);
-					})}
+										</>
+									) : (
+										<p>Menu item not found</p>
+									)}
+								</div>
+							);
+						})}
 
-					{/* Total Amount and Place Order */}
-					<div className="col-span-full mt-4">
-						<div className="text-right text-lg font-semibold">
-							Total: &#8377; {totalAmount}
+						{/* Total Amount and Place Order */}
+						<div className="col-span-full mt-4">
+							<div className="text-right text-lg font-semibold">
+								Total: &#8377; {totalAmount}
+							</div>
+							<div className="text-right mt-4">
+								<button
+									onClick={handlePlaceOrder}
+									className="bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white px-6 py-2 rounded-lg">
+									Place Order
+								</button>
+							</div>
 						</div>
-						<div className="text-right mt-4">
-							<button
-								onClick={handlePlaceOrder}
-								className="bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white px-6 py-2 rounded-lg">
-								Place Order
-							</button>
-						</div>
-					</div>
-				</>
-			) : (
-				<div className='text-[2rem] font-semibold'>Your Cart is empty</div>
-			)}
+					</>
+				) : (
+					<div className='text-[2rem] font-semibold'>Your Cart is empty</div>
+				)}
 		</div>
 	);
 };

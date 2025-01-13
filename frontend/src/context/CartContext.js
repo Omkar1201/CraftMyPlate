@@ -11,9 +11,11 @@ const CartProvider = ({ children }) => {
 	const [menuItems, setMenuItems] = useState([]);
 	const [tempmenuItems, setTempMenuItems] = useState([]);
 	const [orders, setOrders] = useState([]);
+	const [isLoading,setIsLoading]=useState(true)
 
 	const fetchMenuItems = async () => {
 		const token = localStorage.getItem('authToken');
+		setIsLoading(true)
 		try {
 			const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/menu`, {
 				headers: {
@@ -26,9 +28,11 @@ const CartProvider = ({ children }) => {
 		catch (err) {
 			toast.error(err.response?.data?.message)
 		}
+		setIsLoading(false)
 	};
 
 	const fetchOrders = async () => {
+		setIsLoading(true)
 		const token = localStorage.getItem('authToken');
 		try {
 			const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/order`, {
@@ -39,9 +43,11 @@ const CartProvider = ({ children }) => {
 		catch (err) {
 			toast.error(err.response?.data?.message);
 		}
+		setIsLoading(false)
 	};
 
 	const authenticate = async () => {
+		setIsLoading(true)
 		const token = localStorage.getItem('authToken');
 		try {
 			await axios.get(`${process.env.REACT_APP_BASE_URL}/`, {
@@ -54,6 +60,7 @@ const CartProvider = ({ children }) => {
 			toast.warn(err.response?.data?.message);
 			logout()
 		}
+		setIsLoading(false)
 	};
 
 	const logout=()=>{
@@ -81,7 +88,9 @@ const CartProvider = ({ children }) => {
 				fetchOrders,
 				fetchMenuItems,
 				tempmenuItems,
-				setTempMenuItems
+				setTempMenuItems,
+				isLoading,
+				setIsLoading
 			}}
 		>
 			{children}
