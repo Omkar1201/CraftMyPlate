@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { CartContext } from '../context/CartContext';
 import { toast } from 'react-toastify';
@@ -8,6 +8,11 @@ const MenuPage = () => {
 	const [formData, setFormData] = useState({ name: '', category: '', price: '' });
 	const [editingItemId, setEditingItemId] = useState(null);
 	const [isFormVisible, setIsFormVisible] = useState(false);
+	const [selectedOption, setSelectedOption] = useState('');
+
+	const handleChange = (event) => {
+		setSelectedOption(event.target.value);
+	};
 
 	const handleInputChange = (e) => {
 		const { name, value } = e.target;
@@ -86,11 +91,26 @@ const MenuPage = () => {
 		}
 		toast.success(`${item.name} added to cart`)
 	};
-
+	useEffect(() => {
+		if (selectedOption === 'Low to High') {
+			setMenuItems(prevItems => [...prevItems].sort((a, b) => a.price - b.price));
+		} else if (selectedOption === 'High to Low') {
+			setMenuItems(prevItems => [...prevItems].sort((a, b) => b.price - a.price));
+		} else {
+			fetchMenuItems();
+		}
+		// eslint-disable-next-line 
+	}, [selectedOption]);
 	return (
 		<div className="container mx-auto p-6">
 			<h2 className="text-3xl font-semibold text-center">Menu Management</h2>
-
+			<div className='flex justify-end'>
+				<select id="dropdown" value={selectedOption} onChange={handleChange} className='outline-none border px-1 py-[0.4rem] border-gray-200 bg-gray-100 rounded-md'>
+					<option value="">Sort by</option>
+					<option value="Low to High">Price: Low to High</option>
+					<option value="High to Low">Price: High to Low</option>
+				</select>
+			</div>
 			<div
 				className={`transition-all duration-500 ease-in-out ${isFormVisible ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0 overflow-hidden'} bg-gray-100 p-6 rounded-lg shadow-lg mb-6`}
 			>
