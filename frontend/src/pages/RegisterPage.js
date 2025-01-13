@@ -23,16 +23,13 @@ export default function RegisterPage() {
                     },
                 }
             );
-            if (response.data.success) {
-                toast.success(`${response.data.message}`);
-                setTimeout(() => {
-                    navigate('/login');
-                }, 1000);
-            } else {
-                toast.warn(`${response.data.message}`);
-            }
-        } catch (err) {
-            console.log(err.message);
+            toast.success(`${response.data.message}`);
+            setTimeout(() => {
+                navigate('/login');
+            }, 1000);
+        } 
+        catch (err) {
+            toast.error(err.response.data.message)
         }
         setbtnloading(false);
     }

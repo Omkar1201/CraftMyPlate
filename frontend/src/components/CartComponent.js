@@ -2,11 +2,11 @@ import React, { useContext } from 'react';
 import { CartContext } from '../context/CartContext';
 import { MdOutlineDelete } from "react-icons/md";
 import { FaPlus, FaMinus } from "react-icons/fa6";
-import axios from 'axios'; 
+import axios from 'axios';
 import { toast } from 'react-toastify';
 
 const CartComponent = () => {
-	const { cart, menuItems, setCart,fetchOrders } = useContext(CartContext);
+	const { cart, menuItems, setCart, fetchOrders } = useContext(CartContext);
 
 	const handleRemove = (menuItemId) => {
 		const updatedCart = cart.filter(item => item.menuItemId !== menuItemId);
@@ -44,25 +44,20 @@ const CartComponent = () => {
 			return;
 		}
 		const token = localStorage.getItem('authToken');
-		if (!token) {
-			toast.error("No token found. Please log in.");
-			return; 
-		}
 		try {
-			const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/order`, {items:cart},
-				{headers:{Authorization: `Bearer ${localStorage.getItem('authToken')}`}}
+			await axios.post(`${process.env.REACT_APP_BASE_URL}/order`,
+				{ items: cart },
+				{
+					headers:
+						{ Authorization: `Bearer ${token}` }
+				}
 			);
-			
-			if (response.data.success) {
-				toast.success("Order placed successfully!");
-				fetchOrders()
-				setCart([]);
-			} else {
-				toast.warn(`${response.data.message}`);
-			}
-		} catch (error) {
-			toast.error("Error placing the order:", error.message);
-			alert("An error occurred while placing the order. Please try again.");
+			toast.success("Order placed successfully!");
+			fetchOrders()
+			setCart([]);
+		}
+		catch (err) {
+			toast.error(err.response.data.message)
 		}
 	};
 

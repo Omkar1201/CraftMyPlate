@@ -1,27 +1,13 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import axios from 'axios';
 import { CartContext } from '../context/CartContext';
 import { toast } from 'react-toastify';
 
 const MenuPage = () => {
-	const { cart, setCart, menuItems, setMenuItems } = useContext(CartContext);
+	const { cart, setCart, menuItems, setMenuItems, fetchMenuItems } = useContext(CartContext);
 	const [formData, setFormData] = useState({ name: '', category: '', price: '' });
 	const [editingItemId, setEditingItemId] = useState(null);
 	const [isFormVisible, setIsFormVisible] = useState(false);
-
-	const fetchMenuItems = async () => {
-		const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/menu`, {
-			headers: {
-				Authorization: `Bearer ${localStorage.getItem('authToken')}`,
-			},
-		});
-		setMenuItems(response.data.allMenuItems);
-	};
-
-	useEffect(() => {
-		fetchMenuItems();
-		// eslint-disable-next-line
-	}, []);
 
 	const handleInputChange = (e) => {
 		const { name, value } = e.target;
@@ -30,22 +16,34 @@ const MenuPage = () => {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
+		const token = localStorage.getItem('authToken');
 		if (editingItemId) {
-			await axios.put(
-				`${process.env.REACT_APP_BASE_URL}/menu/${editingItemId}`,
-				formData,
-				{
+			try {
+				await axios.put(
+					`${process.env.REACT_APP_BASE_URL}/menu/${editingItemId}`,
+					formData,
+					{
+						headers: {
+							Authorization: `Bearer ${token}`,
+						},
+					}
+				);
+			}
+			catch (err) {
+				toast.error(err.response.data.message)
+			}
+		}
+		else {
+			try {
+				await axios.post(`${process.env.REACT_APP_BASE_URL}/menu`, formData, {
 					headers: {
-						Authorization: `Bearer ${localStorage.getItem('authToken')}`,
+						Authorization: `Bearer ${token}`,
 					},
-				}
-			);
-		} else {
-			await axios.post(`${process.env.REACT_APP_BASE_URL}/menu`, formData, {
-				headers: {
-					Authorization: `Bearer ${localStorage.getItem('authToken')}`,
-				},
-			});
+				});
+			}
+			catch (err) {
+				toast.error(err.response.data.message)
+			}
 		}
 		setEditingItemId(null);
 		setFormData({ name: '', category: '', price: '' });
@@ -60,12 +58,18 @@ const MenuPage = () => {
 	};
 
 	const handleDelete = async (id) => {
-		await axios.delete(`${process.env.REACT_APP_BASE_URL}/menu/${id}`, {
-			headers: {
-				Authorization: `Bearer ${localStorage.getItem('authToken')}`,
-			},
-		});
-		setMenuItems(menuItems.filter((item) => item._id !== id));
+		const token = localStorage.getItem('authToken');
+		try {
+			await axios.delete(`${process.env.REACT_APP_BASE_URL}/menu/${id}`, {
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			});
+			setMenuItems(menuItems.filter((item) => item._id !== id));
+		}
+		catch (err) {
+			toast.error(err.response.data.message)
+		}
 	};
 
 	const addToCart = (item, quantity) => {
@@ -80,10 +84,9 @@ const MenuPage = () => {
 		} else {
 			setCart([...cart, newCartItem]);
 		}
-
 		toast.success(`${item.name} added to cart`)
 	};
-	
+
 	return (
 		<div className="container mx-auto p-6">
 			<h2 className="text-3xl font-semibold text-center">Menu Management</h2>
@@ -145,7 +148,7 @@ const MenuPage = () => {
 								<p className="text-gray-700 mt-2">Price: &#8377;{item.price}</p>
 							</div>
 							<div>
-								{item.availability ? <span className=' text-green-700 font-semibold bg-green-100 rounded-2xl py-[0.2rem] px-2'>Available</span>:<span className=' text-red-700 font-semibold bg-red-100 rounded-2xl py-[0.2rem] px-2'>Unavailable</span>}
+								{item.availability ? <span className=' text-green-700 font-semibold bg-green-100 rounded-2xl py-[0.2rem] px-2'>Available</span> : <span className=' text-red-700 font-semibold bg-red-100 rounded-2xl py-[0.2rem] px-2'>Unavailable</span>}
 							</div>
 						</div>
 						<div className='mt-4 text-gray-700 '>Quantity: </div>

@@ -7,11 +7,11 @@ import axios from 'axios';
 import { CartContext } from '../context/CartContext';
 
 export default function Signin() {
-	const {setisLoggedIn,fetchOrders}=useContext(CartContext)
+	const { setisLoggedIn, fetchOrders } = useContext(CartContext)
 	const [eye, seteye] = useState(true)
 	const [user, setuser] = useState({ username: "", password: "" })
 	const [btnloading, setbtnloading] = useState(false)
-	const navigate=useNavigate()
+	const navigate = useNavigate()
 	async function handlesubmit(event) {
 		event.preventDefault();
 		setbtnloading(true);
@@ -25,19 +25,14 @@ export default function Signin() {
 					},
 				}
 			);
-
-			if (response.data.success) {
-				toast.success(`${response.data.message}`);
-				setisLoggedIn(true)
-				localStorage.setItem("authToken", response.data.token);
-				localStorage.setItem("name", response.data.username);
-				fetchOrders()
-				navigate('/')
-			} else {
-				toast.warn(`${response.data.message}`);
-			}
+			toast.success(`${response.data.message}`);
+			setisLoggedIn(true)
+			localStorage.setItem("authToken", response.data.token);
+			localStorage.setItem("name", response.data.username);
+			fetchOrders()
+			navigate('/')
 		} catch (err) {
-			console.log(err.message);
+			toast.error(err.response.data.message);
 		}
 		setbtnloading(false);
 	}

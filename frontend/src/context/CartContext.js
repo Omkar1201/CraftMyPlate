@@ -11,55 +11,51 @@ const CartProvider = ({ children }) => {
 	const [menuItems, setMenuItems] = useState([]);
 	const [orders, setOrders] = useState([]);
 
-	// Function to fetch orders from the server
+	const fetchMenuItems = async () => {
+		const token = localStorage.getItem('authToken');
+		try {
+			const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/menu`, {
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			});
+			setMenuItems(response.data.allMenuItems);
+		}
+		catch (err) {
+			toast.error(err.response.data.message)
+		}
+	};
+
 	const fetchOrders = async () => {
 		const token = localStorage.getItem('authToken');
-		if (!token) {
-			toast.error('No token found. Please log in.');
-			return;
-		}
-
 		try {
 			const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/order`, {
 				headers: { Authorization: `Bearer ${token}` },
 			});
-
-			if (response.data.success) {
-				setOrders(response.data.userOrders.reverse());
-			} else {
-				toast.warn(response.data.message);
-			}
-		} catch (error) {
-			toast.error('Error fetching orders:', error);
+			setOrders(response.data.userOrders.reverse());
+		}
+		catch (err) {
+			toast.error(err.response.data.message);
 		}
 	};
 
-	// Function to authenticate the user
 	const authenticate = async () => {
 		const token = localStorage.getItem('authToken');
-		if (!token) {
-			toast.error('No token found. Please log in.');
-			return;
-		}
-
 		try {
-			const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/`, {
+			await axios.get(`${process.env.REACT_APP_BASE_URL}/`, {
 				headers: { Authorization: `Bearer ${token}` },
 			});
-
-			if (response.data.success) {
-				setisLoggedIn(true);
-				fetchOrders();
-			} else {
-				toast.warn('Please Login');
-			}
-		} catch (err) {
-			toast.error('Error occurred while logging in');
+			setisLoggedIn(true);
+			fetchOrders();
+		}
+		catch (err) {
+			toast.warn(err.response.data.message);
 		}
 	};
 
 	useEffect(() => {
 		authenticate();
+		fetchMenuItems()
 		// eslint-disable-next-line
 	}, []);
 
@@ -75,6 +71,7 @@ const CartProvider = ({ children }) => {
 				orders,
 				setOrders,
 				fetchOrders,
+				fetchMenuItems
 			}}
 		>
 			{children}
