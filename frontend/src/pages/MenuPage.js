@@ -4,7 +4,7 @@ import { CartContext } from '../context/CartContext';
 import { toast } from 'react-toastify';
 
 const MenuPage = () => {
-	const { cart, setCart, menuItems, setMenuItems, fetchMenuItems } = useContext(CartContext);
+	const { cart, setCart, menuItems, setMenuItems, fetchMenuItems,tempmenuItems, setTempMenuItems } = useContext(CartContext);
 	const [formData, setFormData] = useState({ name: '', category: '', price: '' });
 	const [editingItemId, setEditingItemId] = useState(null);
 	const [isFormVisible, setIsFormVisible] = useState(false);
@@ -71,6 +71,7 @@ const MenuPage = () => {
 				},
 			});
 			setMenuItems(menuItems.filter((item) => item._id !== id));
+			setTempMenuItems(menuItems.filter((item) => item._id !== id));
 		}
 		catch (err) {
 			toast.error(err.response.data.message)
@@ -159,7 +160,7 @@ const MenuPage = () => {
 			</div>
 
 			<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-				{menuItems.map((item) => (
+				{tempmenuItems.map((item) => (
 					<div key={item._id} className="bg-white p-4 rounded-lg border shadow-md">
 						<div className='flex justify-between'>
 							<div>

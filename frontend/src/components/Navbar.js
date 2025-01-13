@@ -16,7 +16,7 @@ import { CartContext } from '../context/CartContext';
 
 function Navbar() {
 	const cur = new Date().toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
-	const { isLoggedIn, cart } = useContext(CartContext);
+	const { isLoggedIn, cart, menuItems, setTempMenuItems } = useContext(CartContext);
 	const [profileModal, setprofileModal] = useState(false)
 	const [signoutModalIsOpen, setSignoutModalIsOpen] = useState(false);
 	const [deletAccount, setdeleteAccount] = useState(false)
@@ -27,14 +27,22 @@ function Navbar() {
 
 	const handleclickmobile = (event) => {
 		event.preventDefault()
+		setTempMenuItems(
+			menuItems.filter((item) => (
+				item.name.toLowerCase().includes(category.toLowerCase()))
+			))
 		navigate('/')
 		window.scrollTo({
 			top: 2100,
 			behavior: 'smooth',
 		})
-	}
+	}	
 	const handleclick = (event) => {
 		event.preventDefault()
+		setTempMenuItems(
+			menuItems.filter((item) => (
+				item.name.toLowerCase().includes(category.toLowerCase()) || item.category.toLowerCase().includes(category.toLowerCase()))
+			))
 		navigate('/')
 		window.scrollTo({
 			top: 910,

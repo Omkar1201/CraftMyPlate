@@ -9,6 +9,7 @@ const CartProvider = ({ children }) => {
 	const [cart, setCart] = useState([]);
 	const [isLoggedIn, setisLoggedIn] = useState(false);
 	const [menuItems, setMenuItems] = useState([]);
+	const [tempmenuItems, setTempMenuItems] = useState([]);
 	const [orders, setOrders] = useState([]);
 
 	const fetchMenuItems = async () => {
@@ -20,6 +21,7 @@ const CartProvider = ({ children }) => {
 				},
 			});
 			setMenuItems(response.data.allMenuItems);
+			setTempMenuItems(response.data.allMenuItems);
 		}
 		catch (err) {
 			toast.error(err.response.data.message)
@@ -71,7 +73,9 @@ const CartProvider = ({ children }) => {
 				orders,
 				setOrders,
 				fetchOrders,
-				fetchMenuItems
+				fetchMenuItems,
+				tempmenuItems,
+				setTempMenuItems
 			}}
 		>
 			{children}
