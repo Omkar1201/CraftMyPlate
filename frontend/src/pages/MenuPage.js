@@ -94,11 +94,11 @@ const MenuPage = () => {
 	};
 	useEffect(() => {
 		if (selectedOption === 'Low to High') {
-			setMenuItems(prevItems => [...prevItems].sort((a, b) => a.price - b.price));
+			setTempMenuItems(prevItems => [...prevItems].sort((a, b) => a.price - b.price));
 		} else if (selectedOption === 'High to Low') {
-			setMenuItems(prevItems => [...prevItems].sort((a, b) => b.price - a.price));
+			setTempMenuItems(prevItems => [...prevItems].sort((a, b) => b.price - a.price));
 		} else {
-			fetchMenuItems();
+			setTempMenuItems(menuItems)
 		}
 		// eslint-disable-next-line 
 	}, [selectedOption]);
