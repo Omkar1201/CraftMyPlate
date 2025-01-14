@@ -79,7 +79,7 @@ export default function Signin() {
 						{
 							btnloading &&
 							<div className='absolute top-2 left-[47.5%]'>
-								{/* <Loading2 /> */}Loading2
+								{/* <Loading2 /> */}
 							</div>
 						}
 					</div>
